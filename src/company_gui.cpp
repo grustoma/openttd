@@ -1,4 +1,4 @@
-/* $Id$ */
+/* $Id: company_gui.cpp 24968 2013-02-04 20:29:38Z rubidium $ */
 
 /*
  * This file is part of OpenTTD.
@@ -51,29 +51,29 @@ static ExpensesType _expenses_list_1[] = {
 	EXPENSES_CONSTRUCTION,
 	EXPENSES_NEW_VEHICLES,
 	EXPENSES_TRAIN_RUN,
-	EXPENSES_ROADVEH_RUN,
-	EXPENSES_AIRCRAFT_RUN,
-	EXPENSES_SHIP_RUN,
-	EXPENSES_PROPERTY,
 	EXPENSES_TRAIN_INC,
+	EXPENSES_ROADVEH_RUN,
 	EXPENSES_ROADVEH_INC,
+	EXPENSES_AIRCRAFT_RUN,
 	EXPENSES_AIRCRAFT_INC,
+	EXPENSES_SHIP_RUN,
 	EXPENSES_SHIP_INC,
+	EXPENSES_PROPERTY,
 	EXPENSES_LOAN_INT,
 	EXPENSES_OTHER,
 };
 
 /** Grouped list of expenses. */
 static ExpensesType _expenses_list_2[] = {
+	EXPENSES_TRAIN_RUN,
 	EXPENSES_TRAIN_INC,
+	EXPENSES_ROADVEH_RUN,
 	EXPENSES_ROADVEH_INC,
+	EXPENSES_AIRCRAFT_RUN,
 	EXPENSES_AIRCRAFT_INC,
+	EXPENSES_SHIP_RUN,
 	EXPENSES_SHIP_INC,
 	INVALID_EXPENSES,
-	EXPENSES_TRAIN_RUN,
-	EXPENSES_ROADVEH_RUN,
-	EXPENSES_AIRCRAFT_RUN,
-	EXPENSES_SHIP_RUN,
 	EXPENSES_PROPERTY,
 	EXPENSES_LOAN_INT,
 	INVALID_EXPENSES,
@@ -96,7 +96,7 @@ struct ExpensesList {
 	uint GetHeight() const
 	{
 		/* heading + line + texts of expenses + sub-totals + total line + total text */
-		return FONT_HEIGHT_NORMAL + EXP_LINESPACE + this->length * FONT_HEIGHT_NORMAL + num_subtotals * (EXP_BLOCKSPACE + EXP_LINESPACE) + EXP_LINESPACE + FONT_HEIGHT_NORMAL;
+		return FONT_HEIGHT_NORMAL + EXP_LINESPACE + (this->length + 5) * FONT_HEIGHT_NORMAL + num_subtotals * (EXP_BLOCKSPACE + EXP_LINESPACE) + EXP_LINESPACE + FONT_HEIGHT_NORMAL;
 	}
 
 	/** Compute width of the expenses categories in pixels. */
@@ -146,6 +146,9 @@ static void DrawCategories(const Rect &r)
 		} else {
 			DrawString(r.left, r.right, y, STR_FINANCES_SECTION_CONSTRUCTION + et);
 			y += FONT_HEIGHT_NORMAL;
+			if (i < 10) {
+				y += (i & 1) * FONT_HEIGHT_NORMAL;
+			}
 		}
 	}
 
@@ -203,6 +206,9 @@ static void DrawYearColumn(const Rect &r, int year, const Money (*tbl)[EXPENSES_
 			sum += cost;
 			if (cost != 0) DrawPrice(cost, r.left, r.right, y);
 			y += FONT_HEIGHT_NORMAL;
+			if (i < 10) {
+				y += (i & 1) * FONT_HEIGHT_NORMAL;
+			}
 		}
 	}
 
@@ -2537,3 +2543,4 @@ void ShowBuyCompanyDialog(CompanyID company)
 {
 	AllocateWindowDescFront<BuyCompanyWindow>(&_buy_company_desc, company);
 }
+
